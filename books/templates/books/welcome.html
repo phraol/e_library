@@ -1,0 +1,15 @@
+{% extends 'books/base.html' %}
+
+{% block title %}Welcome to e-Library{% endblock %}
+
+{% block content %}
+<div class="text-center mt-5">
+    <h1>Welcome to e-Library</h1>
+    <p class="lead">Your online library. Browse books or login to upload new books if you are a librarian or admin.</p>
+    {% if not user.is_authenticated %}
+        <a href="{% url 'login' %}" class="btn btn-primary">Login</a>
+    {% else %}
+        <a href="{% url 'home' %}" class="btn btn-success">Go to Library</a>
+    {% endif %}
+</div>
+{% endblock %}
