@@ -1,15 +1,43 @@
-{% extends 'books/base.html' %}
-
-{% block title %}Welcome to e-Library{% endblock %}
+{% extends 'base.html' %}
+{% block title %}Welcome to ARU e-Library{% endblock %}
 
 {% block content %}
-<div class="text-center mt-5">
-    <h1>Welcome to e-Library</h1>
-    <p class="lead">Your online library. Browse books or login to upload new books if you are a librarian or admin.</p>
+<div class="d-flex flex-column justify-content-center align-items-center text-center mt-5 pt-5" style="min-height: 70vh;">
+    <h1 class="display-4 fw-bold mb-3">Welcome to Arsi University e-Library</h1>
+    <p class="lead text-muted mb-4">Your online library for PDFs and hardcopy books.</p>
+
     {% if not user.is_authenticated %}
-        <a href="{% url 'login' %}" class="btn btn-primary">Login</a>
+        <div class="d-flex flex-column flex-sm-row gap-3 justify-content-center">
+            <a href="{% url 'login' %}" class="btn btn-primary btn-lg px-4">Login</a>
+            <a href="{% url 'signup' %}" class="btn btn-outline-primary btn-lg px-4">Sign Up</a>
+        </div>
     {% else %}
-        <a href="{% url 'home' %}" class="btn btn-success">Go to Library</a>
+        <a href="{% url 'home' %}" class="btn btn-success btn-lg px-5">Go to Library</a>
     {% endif %}
+
+    <!-- Optional illustration or hero image -->
+    <div class="mt-5">
+        <img src="books/images/Screenshot from 2025-09-08 21-33-03.png" alt="Library Illustration" class="img-fluid" style="max-width: 400px;">
+    </div>
 </div>
+
+<style>
+/* Subtle hover effect on buttons */
+.btn-lg {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.btn-lg:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+}
+
+/* Fade-in animation for hero */
+.d-flex img {
+    animation: fadeIn 1s ease forwards;
+    opacity: 0;
+}
+@keyframes fadeIn {
+    to { opacity: 1; }
+}
+</style>
 {% endblock %}

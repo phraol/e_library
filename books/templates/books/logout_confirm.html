@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block title %}Logged Out{% endblock %}
+{% block content %}
+<div class="container text-center mt-5">
+    <div class="alert alert-info shadow-sm">
+        <h3 class="mb-3">👋 You have been logged out</h3>
+        <p class="lead">Thank you for using the Arsi University E-Library.</p>
+        <a href="{% url 'login' %}" class="btn btn-primary mt-3">Login Again</a>
+        <a href="{% url 'welcome' %}" class="btn btn-secondary mt-3">Back to Welcome</a>
+    </div>
+</div>
+{% endblock %}

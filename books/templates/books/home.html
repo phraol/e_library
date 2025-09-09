@@ -1,27 +1,69 @@
-{% extends 'books/base.html' %}
-
+{% extends 'base.html' %}
 {% block title %}Library Home{% endblock %}
 
 {% block content %}
-<h1 class="mb-4">e-Library</h1>
-<div class="row">
-    {% for book in books %}
-    <div class="col-md-4 mb-3">
-        <div class="card h-100">
-            <div class="card-body">
-                <h5 class="card-title">{{ book.title }}</h5>
-                <p class="card-text"><strong>Author:</strong> {{ book.author }}</p>
-                <p class="card-text">{{ book.description|truncatewords:20 }}</p>
-                {% if book.pdf_file %}
-                    <a href="{{ book.pdf_file.url }}" class="btn btn-primary" target="_blank">Download PDF</a>
-                {% else %}
-                    <span class="text-danger">PDF not available</span>
-                {% endif %}
+<div class="container mt-5">
+    <h1 class="mb-5 text-center fw-bold">e-Library</h1>
+
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
+        {% for book in books %}
+        <div class="col">
+            <div class="card h-100 shadow-sm rounded-4 border-0">
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title fw-bold">{{ book.title }}</h5>
+                    <p class="card-text text-muted mb-1"><strong>Author:</strong> {{ book.author }}</p>
+                    <p class="card-text text-truncate">{{ book.description|truncatewords:25 }}</p>
+                    <p class="small text-secondary mb-1"><strong>Department:</strong> {{ book.department }}</p>
+                    <p class="small text-secondary mb-2"><strong>Format:</strong> {{ book.format }}</p>
+
+                    <div class="mt-auto">
+                        {% if book.format == "PDF" and book.book_file %}
+                            <a href="{{ book.book_file.url }}" class="btn btn-primary w-100" target="_blank">Download PDF</a>
+                        {% elif book.format == "HARDCOPY" %}
+                            <span class="text-warning small">Hardcopy: {{ book.hardcopy_available|yesno:"Yes,No" }}</span>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="card-footer bg-transparent border-top-0 text-end">
+                    <small class="text-muted">{{ book.created_at|date:"M d, Y" }}</small>
+                </div>
             </div>
         </div>
+        {% empty %}
+        <div class="col-12">
+            <p class="text-center text-muted mt-4 fs-5">No books available.</p>
+        </div>
+        {% endfor %}
     </div>
-    {% empty %}
-    <p>No books available.</p>
-    {% endfor %}
 </div>
+
+<style>
+/* Card hover effect */
+.card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.card:hover {
+    transform: translateY(-7px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+/* Dark mode support */
+[data-bs-theme="dark"] .card {
+    background-color: #2c2c2c;
+    color: #f5f5f5;
+}
+[data-bs-theme="dark"] .card a.btn-primary {
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+}
+
+/* Responsive text truncation for small cards */
+.card-text.text-truncate {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+}
+</style>
 {% endblock %}
