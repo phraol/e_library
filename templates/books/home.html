@@ -1,70 +1,42 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block title %}Library Home{% endblock %}
+{% block title %}Home | e-Library{% endblock %}
 
 {% block content %}
-<div class="container mt-5">
-    <h1 class="mb-5 text-center fw-bold">e-Library</h1>
+<div class="container py-5">
+    <!-- Search Bar -->
+    <div class="row mb-4">
+        <div class="col-md-8 mx-auto">
+            <form method="get" action="{% url 'home' %}" class="d-flex">
+                <input type="text" name="q" class="form-control me-2" placeholder="Search by title, author, or subject..." value="{{ request.GET.q }}">
+                <button class="btn btn-primary">Search</button>
+            </form>
+        </div>
+    </div>
 
-    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
-        {% for book in books %}
-        <div class="col">
-            <div class="card h-100 shadow-sm rounded-4 border-0">
-                <div class="card-body d-flex flex-column">
-                    <h5 class="card-title fw-bold">{{ book.title }}</h5>
-                    <p class="card-text text-muted mb-1"><strong>Author:</strong> {{ book.author }}</p>
-                    <p class="card-text text-truncate">{{ book.description|truncatewords:25 }}</p>
-                    <p class="small text-secondary mb-1"><strong>Department:</strong> {{ book.department }}</p>
-                    <p class="small text-secondary mb-2"><strong>Format:</strong> {{ book.format }}</p>
-
-                    <div class="mt-auto">
-                        {% if book.format == "PDF" and book.book_file %}
-                            <a href="{{ book.book_file.url }}" class="btn btn-primary w-100" target="_blank">Download PDF</a>
-                        {% elif book.format == "HARDCOPY" %}
-                            <span class="text-warning small">Hardcopy: {{ book.hardcopy_available|yesno:"Yes,No" }}</span>
-                        {% endif %}
+    <!-- Book Grid -->
+    <div class="row">
+        {% if books %}
+            {% for book in books %}
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 shadow-sm">
+                     <div class="card-body">
+                        <h5 class="card-title">{{ book.title }}</h5>
+                        <p class="card-text text-muted">By {{ book.author }}</p>
+                        <p class="card-text"><small class="text-secondary">Subject: {{ book.subject }}</small></p>
+                    </div>
+                    <div class="card-footer bg-white">
+                        <a href="{{ book.pdf.url }}" class="btn btn-sm btn-outline-primary">📖 Read</a>
+                        <a href="{{ book.pdf.url }}" download class="btn btn-sm btn-secondary">⬇️ Download</a>
                     </div>
                 </div>
-                <div class="card-footer bg-transparent border-top-0 text-end">
-                    <small class="text-muted">{{ book.created_at|date:"M d, Y" }}</small>
-                </div>
             </div>
-        </div>
-        {% empty %}
-        <div class="col-12">
-            <p class="text-center text-muted mt-4 fs-5">No books available.</p>
-        </div>
-        {% endfor %}
+            {% endfor %}
+        {% else %}
+            <div class="col-12 text-center">
+                <p class="text-muted">No books found. Try another search.</p>
+            </div>
+        {% endif %}
     </div>
 </div>
-
-<style>
-/* Card hover effect */
-.card {
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-.card:hover {
-    transform: translateY(-7px);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-}
-
-/* Dark mode support */
-[data-bs-theme="dark"] .card {
-    background-color: #2c2c2c;
-    color: #f5f5f5;
-}
-[data-bs-theme="dark"] .card a.btn-primary {
-    background-color: #0d6efd;
-    border-color: #0d6efd;
-}
-
-/* Responsive text truncation for small cards */
-.card-text.text-truncate {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
-}
-</style>
 {% endblock %}
